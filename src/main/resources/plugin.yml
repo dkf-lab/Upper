@@ -1,0 +1,11 @@
+name: Upper
+version: ${project.version}
+main: me.dkflab.upper.Upper
+api-version: 1.18
+commands:
+  credits:
+    description: Credits balance command
+    aliases: [cred, cr]
+  upper:
+    description: Main command
+    aliases: [u]
