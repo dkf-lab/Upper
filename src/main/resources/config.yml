@@ -1,0 +1,12 @@
+# Names of villagers
+base-trade-name: "&7[&b&lShop&7]"
+villager-trade-name: "&7[&6&lShop&7]"
+# Prices of items in store
+villager-emeraldBuy: 250
+villager-emeraldSell: 200
+villager-breadBuy: 150
+villager-breadSell: 100
+base-emeraldBuy: 150
+base-emeraldSell: 100
+base-breadBuy: 250
+base-breadSell: 200

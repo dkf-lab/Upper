@@ -22,5 +22,6 @@ public class MoveListener implements Listener {
         if (main.getBuildingManager().isPlayerInBuilders(p)) {
             main.getBuildingManager().moveListener(e);
         }
+        main.getEnergyManager().tick(p);
     }
 }

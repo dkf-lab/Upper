@@ -1,7 +1,6 @@
 package me.dkflab.upper.commands;
 
 import me.dkflab.upper.Upper;
-import me.dkflab.upper.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -42,7 +41,22 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 }
                 if (args[0].equalsIgnoreCase("create")) {
                     if (args[1].equalsIgnoreCase("village-trade")) {
-
+                        if (sender instanceof Player) {
+                            main.getNpcManager().addVillageTrade(((Player)sender).getLocation());
+                            success(sender, "Added village-trade to your location.");
+                        } else {
+                            notPlayer(sender);
+                        }
+                        return true;
+                    }
+                    if (args[1].equalsIgnoreCase("base-trade")) {
+                        if (sender instanceof Player) {
+                            main.getNpcManager().addBaseTrade(((Player)sender).getLocation());
+                            success(sender, "Added base-trade to your location.");
+                        } else {
+                            notPlayer(sender);
+                        }
+                        return true;
                     }
                 }
                 return true;
@@ -71,9 +85,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                             // TODO
                         }
                     }
-                    if (args[1].equalsIgnoreCase("mine")) {
-                        // TODO
-                    }
+
                 }
                 return true;
             }
@@ -101,7 +113,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     }
                 }
                 if (args[0].equalsIgnoreCase("create")) {
-                    if (args[1].equalsIgnoreCase("village-trade")) {
+                    if (args[1].equalsIgnoreCase("mine")) {
                         // TODO
                     }
                 }
@@ -119,8 +131,9 @@ public class MainCommand implements CommandExecutor, TabExecutor {
         sendMessage(sender, "&8/u &7set &eplayer [player] &7- Reset player back to normal"); // 3 args
         sendMessage(sender, "&8/u &7set &efirst-point &7 - Set location for first join"); // 2 args
         info(sender, "Creation Commands");
-        sendMessage(sender, "&8/u &7create &eprotection-point [radius] &7 - Protect area surrounding from building."); // 3 args
+        sendMessage(sender, "&8/u &7create &eprotection-point [radius] &7 - Protect area surrounding from PVP."); // 3 args
         sendMessage(sender, "&8/u &7create &evillage-trade &7 - Create NPC villager for trading."); // 2 args
+        sendMessage(sender, "&8/u &7create &ebase-trade &7 - Create NPC villager for trading."); // 2 args
         sendMessage(sender, "&8/u &7create &emine [ore] &7 - Create mine with ore."); // 3 args
     }
 
@@ -151,6 +164,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             if (args[0].equalsIgnoreCase("create")) {
                 result.add("protection-point");
                 result.add("village-trade");
+                result.add("base-trade");
                 result.add("mine");
             }
         }
