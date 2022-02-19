@@ -1,7 +1,9 @@
 package me.dkflab.upper;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
@@ -92,5 +94,22 @@ public class Utils {
 
     public static void success(CommandSender sender, String message) {
         sendMessage(sender, "&a&lSuccess! &7" + message);
+    }
+
+    public static ArrayList<Block> getBlocks(Block start, int radius){
+        ArrayList<Block> blocks = new ArrayList<Block>();
+        for(double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++){
+            for(double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++){
+                for(double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++){
+                    Location loc = new Location(start.getWorld(), x, y, z);
+                    blocks.add(loc.getBlock());
+                }
+            }
+        }
+        return blocks;
+    }
+
+    public static void noPerms(CommandSender s) {
+        error(s, "Insufficient permissions.");
     }
 }

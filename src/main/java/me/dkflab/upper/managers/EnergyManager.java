@@ -32,7 +32,6 @@ public class EnergyManager {
     }
 
     public float calculateLoad(Player p) {
-        // TODO: 19/02/2022
         float load = 5;
         if (p.getInventory().getContents() != null) {
             for (ItemStack item : p.getInventory().getContents()) {

@@ -1,7 +1,9 @@
 package me.dkflab.upper.commands;
 
 import me.dkflab.upper.Upper;
+import me.dkflab.upper.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -82,7 +84,11 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     if (args[1].equalsIgnoreCase("protection-point")) {
                         if (parseInt(sender,args[2])) {
                             int radius = Integer.parseInt(args[2]);
-                            // TODO
+                            if (!(sender instanceof Player)) {
+                                notPlayer(sender);
+                                return true;
+                            }
+                            success(sender, "Created protection point at your location.");
                         }
                     }
 
@@ -92,7 +98,18 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             if (args.length == 4) {
                 if (args[0].equalsIgnoreCase("set")) {
                     if (args[1].equalsIgnoreCase("first-point")) {
-
+                        if (!sender.hasPermission("upper.admin")) {
+                            noPerms(sender);
+                            return true;
+                        }
+                        if (!(sender instanceof Player)) {
+                            notPlayer(sender);
+                            return true;
+                        }
+                        main.getConfig().set("first-point",((Player)sender).getLocation());
+                        main.saveConfig();
+                        main.reloadConfig();
+                        success(sender, "Set first point to your location.");
                     }
                     if (args[1].equalsIgnoreCase("builder")) {
                         Player target = null;
@@ -114,7 +131,25 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 }
                 if (args[0].equalsIgnoreCase("create")) {
                     if (args[1].equalsIgnoreCase("mine")) {
-                        // TODO
+                        // create mine [ore] [radius]
+                        Material ore = null;
+                        for (Material m : Material.values()) {
+                            if (m.name().equalsIgnoreCase(args[2])) {
+                                ore = m;
+                            }
+                        }
+                        if (ore == null) {
+                            error(sender, args[2] + " is not a block.");
+                            return true;
+                        }
+                        if (!(sender instanceof Player)) {
+                            notPlayer(sender);
+                            return true;
+                        }
+                        if (parseInt(sender,args[3])) {
+                            main.getMineManager().createMine(((Player)sender).getLocation(),Integer.parseInt(args[3]),ore);
+                            success(sender, "Successfully created mine at your location.");
+                        }
                     }
                 }
                 return true;
@@ -134,7 +169,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
         sendMessage(sender, "&8/u &7create &eprotection-point [radius] &7 - Protect area surrounding from PVP."); // 3 args
         sendMessage(sender, "&8/u &7create &evillage-trade &7 - Create NPC villager for trading."); // 2 args
         sendMessage(sender, "&8/u &7create &ebase-trade &7 - Create NPC villager for trading."); // 2 args
-        sendMessage(sender, "&8/u &7create &emine [ore] &7 - Create mine with ore."); // 3 args
+        sendMessage(sender, "&8/u &7create &emine [ore] [radius] &7 - Create mine with ore."); // 3 args
     }
 
     List<String> arguments = new ArrayList<>();
@@ -190,6 +225,9 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 }
                 if (args[1].equalsIgnoreCase("mine")) {
                     result.add("[ore]");
+                    for (Material m : Material.values()) {
+                        result.add(m.name());
+                    }
                 }
             }
         }
@@ -197,6 +235,9 @@ public class MainCommand implements CommandExecutor, TabExecutor {
         if (args.length == 4) {
             if (args[0].equalsIgnoreCase("set")) {
                 if (args[1].equalsIgnoreCase("builder")) {
+                    result.add("[radius]");
+                }
+                if (args[1].equalsIgnoreCase("mine")) {
                     result.add("[radius]");
                 }
             }

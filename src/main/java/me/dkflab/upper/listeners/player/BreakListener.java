@@ -16,7 +16,11 @@ public class BreakListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
         if (!main.getBuildingManager().isPlayerInBuilders(e.getPlayer())) {
-            e.setCancelled(true);
+            if (!main.getMineManager().isBlockInMine(e.getBlock().getLocation())) {
+                e.setCancelled(true);
+            } else {
+                main.getEnergyManager().subtractEnergy(e.getPlayer(), main.getConfig().getInt("energy-cost-blockBreak"));
+            }
         }
     }
 }

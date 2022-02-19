@@ -10,3 +10,6 @@ base-emeraldBuy: 150
 base-emeraldSell: 100
 base-breadBuy: 250
 base-breadSell: 200
+# Energy
+# The amount of energy needed to break a block
+energy-cost-blockBreak: 1
