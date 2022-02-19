@@ -44,6 +44,16 @@ public class Utils {
         return true;
     }
 
+    public static boolean parseLong(CommandSender sender, String parse) {
+        try {
+            Long.parseLong(parse);
+        } catch (NumberFormatException e) {
+            error(sender, parse + " is not an integer!");
+            return false;
+        }
+        return true;
+    }
+
     private static ItemStack pane;
     public static ItemStack blankPane() {
         if (pane == null) {

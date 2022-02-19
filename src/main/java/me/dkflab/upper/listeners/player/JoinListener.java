@@ -21,5 +21,6 @@ public class JoinListener implements Listener {
                 e.getPlayer().teleportAsync(main.getConfig().getLocation("first-point"));
             }
         }
+        main.getEnergyManager().setEnergy(e.getPlayer(),6000);
     }
 }

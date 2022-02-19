@@ -1,6 +1,7 @@
 package me.dkflab.upper;
 
 import me.dkflab.upper.commands.CreditsCommands;
+import me.dkflab.upper.commands.EnergyCommand;
 import me.dkflab.upper.commands.MainCommand;
 import me.dkflab.upper.listeners.player.*;
 import me.dkflab.upper.managers.BuildingManager;
@@ -19,6 +20,7 @@ public final class Upper extends JavaPlugin {
         initializeListeners();
         getNpcManager(); // make sure our NPCs spawn
         getBuildingManager();
+        getEnergyManager();
         Runnable energyTick = new Runnable() {
             @Override
             public void run() {
@@ -37,6 +39,7 @@ public final class Upper extends JavaPlugin {
     private void initializeCommands() {
         new MainCommand(this);
         new CreditsCommands(this);
+        new EnergyCommand(this);
     }
 
     private void initializeListeners() {

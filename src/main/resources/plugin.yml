@@ -9,3 +9,5 @@ commands:
   upper:
     description: Main command
     aliases: [u]
+  energy:
+    description: View energy details
