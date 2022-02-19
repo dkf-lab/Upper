@@ -1,6 +1,7 @@
 package me.dkflab.upper.managers;
 
 import me.dkflab.upper.Upper;
+import me.dkflab.upper.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -77,6 +78,11 @@ public class EnergyManager {
     }
 
     public void subtractEnergy(Player p, float amount) {
+        if (getEnergy(p)-amount < 0) {
+            setEnergy(p, 0);
+            Utils.sendMessage(p, "&c&l[!]&7 You've run out of energy! Wait for a re-gen to continue moving.");
+            return;
+        }
         setEnergy(p,getEnergy(p)-amount);
     }
 

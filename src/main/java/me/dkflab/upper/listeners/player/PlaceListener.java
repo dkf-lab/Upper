@@ -15,6 +15,10 @@ public class PlaceListener implements Listener {
 
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
+        if (e.getPlayer().hasPermission("upper.admin")) {
+            return;
+        }
+
         if (main.getBuildingManager().isPlayerInBuilders(e.getPlayer())) {
             main.getBuildingManager().placeListener(e);
             return;

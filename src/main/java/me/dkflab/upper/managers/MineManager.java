@@ -15,12 +15,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 
 public class MineManager {
 
     List<Mine> mines = new ArrayList<>();
+    HashMap<Block, Material> resetList = new HashMap<>();
+
 
     private Upper main;
     public MineManager(Upper main) {
@@ -54,7 +57,16 @@ public class MineManager {
         return false;
     }
 
+    public void addBlockToReset(Block b, Material type) {
+        resetList.put(b,type);
+    }
+
     public void resetMines() {
+        if (resetList != null) {
+            for (Block b : resetList.keySet()) {
+                b.setType(resetList.get(b));
+            }
+        }
         for (Mine m : mines) {
             Location middle = m.getMiddle();
             for (int i = 1; i < 255; i++) {

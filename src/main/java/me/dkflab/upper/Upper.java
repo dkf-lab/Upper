@@ -42,6 +42,7 @@ public final class Upper extends JavaPlugin {
     public void onDisable() {
         getNpcManager().despawnNPCs();
         getBuildingManager().disable();
+        getMineManager().resetMines();
     }
 
     private void initializeCommands() {

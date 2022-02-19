@@ -23,5 +23,8 @@ public class MoveListener implements Listener {
             main.getBuildingManager().moveListener(e);
         }
         main.getEnergyManager().tick(p);
+        if (main.getEnergyManager().getEnergy(p) <= 0) {
+            e.setCancelled(true);
+        }
     }
 }
