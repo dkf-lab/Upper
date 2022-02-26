@@ -10,8 +10,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class Upper extends JavaPlugin {
 
+    public boolean placeholder = false;
+
     @Override
     public void onEnable() {
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            placeholder = true;
+        }
         saveDefaultConfig();
         initializeCommands();
         initializeListeners();
@@ -19,6 +24,7 @@ public final class Upper extends JavaPlugin {
         getBuildingManager();
         getEnergyManager();
         getMineManager();
+        new PlaceholderManager(this).register();
         Runnable mineTick = new Runnable() {
             @Override
             public void run() {

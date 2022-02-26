@@ -2,6 +2,7 @@ name: Upper
 version: ${project.version}
 main: me.dkflab.upper.Upper
 api-version: 1.18
+softdepend: [PlaceholderAPI]
 commands:
   credits:
     description: Credits balance command
