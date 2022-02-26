@@ -29,7 +29,10 @@ public class EnergyManager {
 
     public void tick(Player p) {
         // Calculate load and then take energy
-        subtractEnergy(p,(calculateLoad(p)/4)); // event occurs about 3-4 times when moving from one block to next
+        float load = calculateLoad(p);
+        subtractEnergy(p,(load/4)); // event occurs about 3-4 times when moving from one block to next
+        p.sendActionBar(Utils.color("&7Credits: &a" + main.getCreditManager().getCredits(p.getUniqueId()) + " &7Load: &b") + load);
+        p.setFoodLevel(Math.round(getEnergy(p)/6000));
     }
 
     public float calculateLoad(Player p) {
