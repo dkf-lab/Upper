@@ -15,6 +15,7 @@ public class PickupListener implements Listener {
 
     @EventHandler
     public void onPickup(PlayerPickupItemEvent e) {
+        // depreciated
         if (!(main.getMineManager().isBlockInMine(e.getPlayer().getLocation()))) {
             e.setCancelled(true);
         }

@@ -25,6 +25,7 @@ public class BreakListener implements Listener {
             } else {
                 main.getEnergyManager().subtractEnergy(e.getPlayer(), main.getConfig().getInt("energy-cost-blockBreak"));
                 main.getMineManager().addBlockToReset(e.getBlock(), Material.STONE);
+                e.setDropItems(false);
             }
         }
     }

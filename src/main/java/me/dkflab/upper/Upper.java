@@ -62,7 +62,7 @@ public final class Upper extends JavaPlugin {
         new PlaceListener(this);
         new JoinListener(this);
         new BreakListener(this);
-        new PickupListener(this);
+        //new PickupListener(this);
         new InteractListener(this);
         new InventoryClick(this);
     }
