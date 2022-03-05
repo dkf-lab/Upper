@@ -3,6 +3,7 @@ package me.dkflab.upper.managers;
 import me.dkflab.upper.Upper;
 import me.dkflab.upper.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -75,20 +77,35 @@ public class NPCManager {
         }
         if (i.hasItemMeta()) {
             if (i.getItemMeta().getDisplayName().equals(color("&a&lEmerald"))) {
-                if (main.getCreditManager().purchase(e.getWhoClicked().getUniqueId(),c.getInt("villager-emeraldBuy"))) {
-                    e.getWhoClicked().getInventory().addItem(new ItemStack(Material.EMERALD, 1));
-                    success(e.getWhoClicked(), "Purchase successful.");
-                } else {
-                    error(e.getWhoClicked(),"Insufficient funds.");
-                }
+                purchaseitem((Player) e.getWhoClicked(),Material.EMERALD,c.getInt("villager-emeraldBuy"),main.getConfig().getString("villager-trade-name"));
                 return;
             }
             if (i.getItemMeta().getDisplayName().equals(color("&e&lBread"))) {
-                if (main.getCreditManager().purchase(e.getWhoClicked().getUniqueId(),c.getInt("villager-breadBuy"))) {
-                    e.getWhoClicked().getInventory().addItem(new ItemStack(Material.BREAD, 1));
-                    success(e.getWhoClicked(), "Purchase successful.");
-                } else {
-                    error(e.getWhoClicked(),"Insufficient funds.");
+                purchaseitem((Player) e.getWhoClicked(), Material.BREAD, c.getInt("villager-breadBuy"),main.getConfig().getString("villager-trade-name"));
+                return;
+            }
+            if (i.getItemMeta().getDisplayName().contains(Utils.color("&e&lPurchase"))) {
+                if (i.getItemMeta().getLore() != null) {
+                    int price = 0;
+                    int amount = 0;
+                    for (String l : i.getItemMeta().getLore()) {
+                        l = ChatColor.stripColor(l);
+                        if (l.startsWith("Amount")) {
+                            amount = Integer.parseInt(l.replaceFirst(".*?(\\d+).*", "$1"));
+                        }
+                        if (l.startsWith("Price")) {
+                            price = Integer.parseInt(l.replaceFirst(".*?(\\d+).*", "$1"));
+                        }
+                    }
+                    if (price==0||amount==0) {
+                        return;
+                    }
+                    if (main.getCreditManager().purchase(e.getWhoClicked().getUniqueId(),price)) {
+                        e.getWhoClicked().getInventory().addItem(new ItemStack(i.getType(), amount));
+                        success(e.getWhoClicked(), "Purchase successful.");
+                    } else {
+                        error(e.getWhoClicked(),"Insufficient funds.");
+                    }
                 }
                 return;
             }
@@ -109,6 +126,38 @@ public class NPCManager {
         }
     }
 
+    public void purchaseitem(Player target, Material type, int price, String title) {
+        Inventory i = Bukkit.createInventory(null, 9,Utils.color(title));
+        i.setItem(0,Utils.blankPane());
+        i.setItem(8,Utils.blankPane());
+        i.setItem(4,Utils.createItem(Material.PAPER,1,"&aPurchase", Collections.singletonList("&7Select amount"),null,null,false));
+        List<String> lore = new ArrayList<>();
+        lore.add("&7Amount: &b1");
+        lore.add("&7Price: &a" + price);
+        i.setItem(1,Utils.createItem(type,1,"&e&lPurchase One", lore, null, null, false));
+        lore.clear();
+        lore.add("&7Amount: &b5");
+        lore.add("&7Price: &a" + price*5);
+        i.setItem(2,Utils.createItem(type,1,"&e&lPurchase Five", lore, null, null, false));
+        lore.clear();
+        lore.add("&7Amount: &b10");
+        lore.add("&7Price: &a" + price*10);
+        i.setItem(3,Utils.createItem(type,1,"&e&lPurchase Ten", lore, null, null, false));
+        lore.clear();
+        lore.add("&7Amount: &b64");
+        lore.add("&7Price: &a" + price*64);
+        i.setItem(5,Utils.createItem(type,1,"&e&lPurchase 1 Stack", lore, null, null, false));
+        lore.clear();
+        lore.add("&7Amount: &b128");
+        lore.add("&7Price: &a" + price*128);
+        i.setItem(6,Utils.createItem(type,1,"&e&lPurchase 2 Stacks", lore, null, null, false));
+        lore.clear();
+        lore.add("&7Amount: &b192");
+        lore.add("&7Price: &a" + price*192);
+        i.setItem(7,Utils.createItem(type,1,"&e&lPurchase 3 Stacks", lore, null, null, false));
+        target.openInventory(i);
+    }
+
     public void baseTradeInvListener(InventoryClickEvent e) {
         ItemStack i = e.getCurrentItem();
         FileConfiguration c = main.getConfig();
@@ -117,34 +166,49 @@ public class NPCManager {
         }
         if (i.hasItemMeta()) {
             if (i.getItemMeta().getDisplayName().equals(color("&a&lEmerald"))) {
-                if (main.getCreditManager().purchase(e.getWhoClicked().getUniqueId(),c.getInt("base-emeraldBuy"))) {
-                    e.getWhoClicked().getInventory().addItem(new ItemStack(Material.EMERALD, 1));
-                    success(e.getWhoClicked(), "Purchase successful.");
-                } else {
-                    error(e.getWhoClicked(),"Insufficient funds.");
-                }
+                purchaseitem((Player) e.getWhoClicked(),Material.EMERALD,c.getInt("base-emeraldBuy"),main.getConfig().getString("base-trade-name"));
                 return;
             }
             if (i.getItemMeta().getDisplayName().equals(color("&e&lBread"))) {
-                if (main.getCreditManager().purchase(e.getWhoClicked().getUniqueId(),c.getInt("base-breadBuy"))) {
-                    e.getWhoClicked().getInventory().addItem(new ItemStack(Material.BREAD, 1));
-                    success(e.getWhoClicked(), "Purchase successful.");
-                } else {
-                    error(e.getWhoClicked(),"Insufficient funds.");
+                purchaseitem((Player) e.getWhoClicked(), Material.BREAD, c.getInt("base-breadBuy"),main.getConfig().getString("base-trade-name"));
+                return;
+            }
+            if (i.getItemMeta().getDisplayName().contains(Utils.color("&e&lPurchase"))) {
+                if (i.getItemMeta().getLore() != null) {
+                    int price = 0;
+                    int amount = 0;
+                    for (String l : i.getItemMeta().getLore()) {
+                        l = ChatColor.stripColor(l);
+                        if (l.startsWith("Amount")) {
+                            amount = Integer.parseInt(l.replaceFirst(".*?(\\d+).*", "$1"));
+                        }
+                        if (l.startsWith("Price")) {
+                            price = Integer.parseInt(l.replaceFirst(".*?(\\d+).*", "$1"));
+                        }
+                    }
+                    if (price==0||amount==0) {
+                        return;
+                    }
+                    if (main.getCreditManager().purchase(e.getWhoClicked().getUniqueId(),price)) {
+                        e.getWhoClicked().getInventory().addItem(new ItemStack(i.getType(), amount));
+                        success(e.getWhoClicked(), "Purchase successful.");
+                    } else {
+                        error(e.getWhoClicked(),"Insufficient funds.");
+                    }
                 }
                 return;
             }
         }
         if (i.getType().equals(Material.EMERALD)) {
             int amount = i.getAmount();
-            int price = c.getInt("base-emeraldSell");
+            int price = c.getInt("villager-emeraldSell");
             e.getWhoClicked().getInventory().removeItem(i);
             main.getCreditManager().addCredits(e.getWhoClicked().getUniqueId(),price*amount);
-            success(e.getWhoClicked(), "Sold &e" + amount + " &eEmeralds&7 for &e" + price*amount + " Credits&7!");
+            success(e.getWhoClicked(), "Sold &e" + amount + " &eEmeralds &7for &e" + price*amount + " Credits&7!");
         }
         if (i.getType().equals(Material.BREAD)) {
             int amount = i.getAmount();
-            int price = c.getInt("base-breadSell");
+            int price = c.getInt("villager-breadSell");
             e.getWhoClicked().getInventory().removeItem(i);
             main.getCreditManager().addCredits(e.getWhoClicked().getUniqueId(),price*amount);
             success(e.getWhoClicked(), "Sold &e" + amount + " &eBread&7 for &e" + price*amount + " Credits&7!");

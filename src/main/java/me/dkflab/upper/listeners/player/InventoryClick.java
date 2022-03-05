@@ -19,12 +19,12 @@ public class InventoryClick implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (ChatColor.stripColor(e.getView().getTitle()).equals(ChatColor.stripColor(color(main.getConfig().getString("villager-trade-name"))))) {
-            main.getNpcManager().villageTradeInvListener(e);
             e.setCancelled(true);
+            main.getNpcManager().villageTradeInvListener(e);
         }
         if (e.getView().getTitle().equals(color(main.getConfig().getString("base-trade-name")))) {
-            main.getNpcManager().baseTradeInvListener(e);
             e.setCancelled(true);
+            main.getNpcManager().baseTradeInvListener(e);
         }
     }
 }
