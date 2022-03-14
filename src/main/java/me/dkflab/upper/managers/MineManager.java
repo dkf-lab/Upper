@@ -73,9 +73,9 @@ public class MineManager {
                 middle.setY(i);
                 for (Block b: Utils.getBlocks(middle.getBlock(), m.getRadius())) {
                     if (b.getType().equals(Material.STONE)) {
-                        if (Math.random() < 0.01) {
+                       // if (Math.random() < 0.01) {
                             b.setType(m.getMaterial());
-                        }
+                     //   }
                     }
                 }
             }
