@@ -3,6 +3,7 @@ package me.dkflab.upper.managers;
 import me.dkflab.upper.Upper;
 import me.dkflab.upper.Utils;
 import me.dkflab.upper.objects.Mine;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -32,20 +33,23 @@ public class MineManager {
         for (String key : getConfig().getKeys(false)) {
             ConfigurationSection sec = getConfig().getConfigurationSection(key);
             if (sec != null) {
-                mines.add(new Mine(sec.getLocation("middle"),sec.getInt("radius"),Material.getMaterial(sec.getString("material"))));
+                mines.add(new Mine(sec.getLocation("middle"),sec.getInt("radius"),Material.getMaterial(sec.getString("material")),sec.getLocation("player")));
             }
         }
     }
 
-    public void createMine(Location middle, int radius, Material ore) {
-        Mine e = new Mine(middle,radius,ore);
+    public void createMine(Location middle, int radius, Material ore, Location player) {
+        Mine e = new Mine(middle,radius,ore,player);
         mines.add(e);
         int index = getConfig().getKeys(false).size()+1;
         getConfig().set(index + ".middle", middle);
         getConfig().set(index + ".radius", radius);
         getConfig().set(index + ".material",ore.name());
+        getConfig().set(index + ".player", player);
+        main.getAnchorManager().createMineAnchor(e);
         saveConfig();
         reloadConfig();
+        resetMines();
     }
 
     public boolean isBlockInMine(Location loc) {
@@ -55,6 +59,37 @@ public class MineManager {
             }
         }
         return false;
+    }
+
+    public void removeMine(Mine m) {
+        if (m == null) {
+            return;
+        }
+        for (String key : getConfig().getKeys(false)) {
+            Location middle = getConfig().getLocation(key + ".middle");
+            Location player = getConfig().getLocation(key + ".player");
+            int radius = getConfig().getInt(key + ".radius");
+            if (m.getRadius() == radius) {
+                if (m.getMiddle() == middle) {
+                    if (m.getPlayerMiddle() == player) {
+                        getConfig().set(key,null);
+                        saveConfig();
+                        reloadConfig();
+                        resetMines();
+                    }
+                }
+            }
+        }
+    }
+
+    public Mine getMineOfBlock(Location loc) {
+        for (Mine m : mines) {
+            Bukkit.getLogger().info("Checking if within mine " + m);
+            if (m.getPlayerMiddle().distanceSquared(loc) <= 4) {
+                return m;
+            }
+        }
+        return null;
     }
 
     public void addBlockToReset(Block b, Material type) {
@@ -73,9 +108,7 @@ public class MineManager {
                 middle.setY(i);
                 for (Block b: Utils.getBlocks(middle.getBlock(), m.getRadius())) {
                     if (b.getType().equals(Material.STONE)) {
-                       // if (Math.random() < 0.01) {
-                            b.setType(m.getMaterial());
-                     //   }
+                        b.setType(m.getMaterial());
                     }
                 }
             }

@@ -1,3 +1,5 @@
+# Mine reset time (in seconds)
+mine-reset-time: 3600
 # Names of villagers
 base-trade-name: "&7[&b&lShop&7]"
 villager-trade-name: "&7[&6&lShop&7]"

@@ -7,18 +7,23 @@ import org.bukkit.block.Block;
 
 public class Mine {
 
-    private Location middle;
+    private Location middle, playerMiddle;
     private int radius;
     private Material ore;
 
-    public Mine(Location middle,int radius, Material ore) {
+    public Mine(Location middle,int radius, Material ore,Location playerMiddle) {
         this.middle = middle;
         this.radius = radius;
         this.ore = ore;
+        this.playerMiddle = playerMiddle;
     }
 
     public Location getMiddle() {
         return this.middle;
+    }
+
+    public Location getPlayerMiddle() {
+        return this.playerMiddle;
     }
 
     public int getRadius() {

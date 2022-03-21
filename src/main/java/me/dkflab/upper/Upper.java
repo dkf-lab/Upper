@@ -24,7 +24,12 @@ public final class Upper extends JavaPlugin {
         getBuildingManager();
         getEnergyManager();
         getMineManager();
+        getAnchorManager();
         new PlaceholderManager(this).register();
+        int time = getConfig().getInt("mine-reset-time");
+        if (time == 0) {
+            time = 3600;
+        }
         Runnable mineTick = new Runnable() {
             @Override
             public void run() {
@@ -32,7 +37,7 @@ public final class Upper extends JavaPlugin {
                 getMineManager().resetMines();
             }
         };
-        Bukkit.getScheduler().runTaskTimer(this, mineTick, 0, 60*60*20);
+        Bukkit.getScheduler().runTaskTimer(this, mineTick, 0, time*20);
 
         Runnable energyTick = new Runnable() {
             @Override
@@ -73,6 +78,14 @@ public final class Upper extends JavaPlugin {
             buildingManager = new BuildingManager(this);
         }
         return buildingManager;
+    }
+
+    AnchorManager anchorManager;
+    public AnchorManager getAnchorManager() {
+        if (anchorManager == null) {
+            anchorManager = new AnchorManager(this);
+        }
+        return anchorManager;
     }
 
     CreditManager creditManager;

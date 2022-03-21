@@ -3,6 +3,7 @@ package me.dkflab.upper.commands;
 import me.dkflab.upper.Upper;
 import me.dkflab.upper.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -147,7 +148,8 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                             return true;
                         }
                         if (parseInt(sender,args[3])) {
-                            main.getMineManager().createMine(((Player)sender).getLocation(),Integer.parseInt(args[3]),ore);
+                            Location l = ((Player)sender).getLocation();
+                            main.getMineManager().createMine(l,Integer.parseInt(args[3]),ore,l);
                             success(sender, "Successfully created mine at your location.");
                         }
                     }

@@ -16,6 +16,13 @@ public class BreakListener implements Listener {
 
     @EventHandler
     public void onBreak(BlockBreakEvent e) {
+        // Anchor listener
+        if (e.getPlayer().hasPermission("upper.admin")) {
+            if (e.getBlock().getType().equals(Material.TARGET)) {
+                main.getAnchorManager().checkForAnchor(e.getBlock());
+            }
+        }
+        //
         if (!main.getBuildingManager().isPlayerInBuilders(e.getPlayer())) {
             if (!main.getMineManager().isBlockInMine(e.getBlock().getLocation())) {
                 if (e.getPlayer().hasPermission("upper.admin")) {
