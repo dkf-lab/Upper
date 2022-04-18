@@ -28,9 +28,8 @@ public class BuildingManager {
     public void moveListener(PlayerMoveEvent e) {
         for (Location middle : builders.get(e.getPlayer()).keySet()) {
             if (e.getPlayer().getLocation().distanceSquared(middle) >= Math.pow(builders.get(e.getPlayer()).get(middle),2)) {
-                e.getPlayer().teleportAsync(middle);
-                e.setCancelled(true);
-                error(e.getPlayer(),"Don't leave the building area!");
+                info(e.getPlayer(), "You have left the building area");
+                removePlayerFromBuilders(e.getPlayer());
             }
         }
     }
